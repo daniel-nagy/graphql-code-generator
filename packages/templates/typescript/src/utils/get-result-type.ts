@@ -1,12 +1,17 @@
 import { pascalCase } from 'change-case';
 
-export function getResultType(type, options) {
+function shouldUseInterfacePrefix({ isInputType, isInterface, isType }): boolean {
+  return isInputType || isInterface || isType;
+}
+
+export function getResultType(type, options, ignoreInterfacePrefix = false) {
   const baseType = type.type;
   const underscorePrefix = type.type.match(/^[\_]+/) || '';
   const config = options.data.root.config || {};
   const realType =
     options.data.root.primitivesMap[baseType] ||
-    `${type.isScalar ? '' : config.interfacePrefix || ''}${underscorePrefix + pascalCase(baseType)}`;
+    `${!ignoreInterfacePrefix && shouldUseInterfacePrefix(type) ? config.interfacePrefix || '' : ''}${underscorePrefix +
+      pascalCase(baseType)}`;
   const useImmutable = !!config.immutableTypes;
 
   if (type.isArray) {
