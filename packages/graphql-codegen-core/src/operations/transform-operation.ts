@@ -7,8 +7,16 @@ import { debugLog } from '../debugging';
 import { print } from 'graphql/language/printer';
 import { getDirectives } from '../utils/get-directives';
 
-export function transformOperation(schema: GraphQLSchema, operationNode: OperationDefinitionNode, overrideName?: string | null): Operation {
-  const name = overrideName ? overrideName : operationNode.name && operationNode.name.value ? operationNode.name.value : '';
+export function transformOperation(
+  schema: GraphQLSchema,
+  operationNode: OperationDefinitionNode,
+  overrideName?: string | null
+): Operation {
+  const name = overrideName
+    ? overrideName
+    : operationNode.name && operationNode.name.value
+      ? operationNode.name.value
+      : '';
   debugLog(`[transformOperation] transforming operation ${name} of type ${operationNode.operation}`);
 
   const root = getRoot(schema, operationNode);
@@ -23,6 +31,7 @@ export function transformOperation(schema: GraphQLSchema, operationNode: Operati
 
   return {
     name,
+    namespace: (operationNode as any).namespace,
     selectionSet,
     operationType: operationNode.operation,
     variables: variables,

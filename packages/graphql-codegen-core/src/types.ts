@@ -186,6 +186,7 @@ export interface Fragment extends AstNode {
 
 export interface Operation extends AstNode {
   name: string;
+  namespace: string;
   selectionSet: SelectionSetItem[];
   operationType: string;
   variables: Variable[];
